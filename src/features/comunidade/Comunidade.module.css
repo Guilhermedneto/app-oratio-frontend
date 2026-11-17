@@ -1,0 +1,17 @@
+.list { display: grid; gap: 12px; }
+.card { position: relative; background: var(--bg-grouped); border-radius: var(--radius); padding: 16px; display: grid; gap: 10px; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.text { font-size: 1.02rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.counts { font-size: 0.85rem; color: var(--text-2); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.pray, .prayOn, .ghost, .danger { min-height: 44px; padding: 0 16px; border-radius: 22px; font-weight: 600; font-size: 0.92rem; background: var(--fill); color: var(--accent); }
+.prayOn { background: var(--accent); color: var(--accent-contrast); }
+.ghost { color: var(--text); font-weight: 500; }
+.danger { color: var(--danger); font-weight: 500; background: transparent; padding: 0 10px; }
+.pray:active, .prayOn:active { transform: scale(0.96); }
+.comments { display: grid; gap: 10px; padding-top: 10px; border-top: 0.5px solid var(--separator); }
+.comment { display: grid; gap: 2px; font-size: 0.95rem; overflow-wrap: anywhere; }
+.compose { display: flex; gap: 8px; align-items: center; }
+.compose input { flex: 1; min-height: 44px; padding: 8px 14px; border-radius: 22px; }
+.banner { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.fab { width: 100%; }
