@@ -82,8 +82,9 @@ const FAV_TYPE: Partial<Record<Folder | 'terco', FavoriteItem['item_type']>> = {
 }
 
 /** Itens estáticos (empacotados) + os cadastrados pelo gestor para o mesmo tipo. */
-function useEntries(folder: Folder | 'terco'): { entries: Entry[]; label: (cat: string) => string } {
-  const managed = useManagedContents().data
+function useEntries(folder: Folder | 'terco'): { entries: Entry[]; label: (cat: string) => string; loading: boolean } {
+  const query = useManagedContents()
+  const managed = query.data
   const cats = useCategories().data
   const kind = KIND_OF_FOLDER[folder]
   const entries = useMemo<Entry[]>(() => {
@@ -97,13 +98,13 @@ function useEntries(folder: Folder | 'terco'): { entries: Entry[]; label: (cat: 
       : merged.sort((a, b) => a.titulo.localeCompare(b.titulo, 'pt-BR'))
   }, [folder, managed, kind])
   const label = (cat: string) => CATEGORY_LABEL[cat] ?? cats?.find((c) => c.slug === cat)?.name ?? cat
-  return { entries, label }
+  return { entries, label, loading: query.isPending }
 }
 
 export function DocList({ folder, title, base, search, back, subtitle, notice }: ListProps) {
   const [q, setQ] = useState('')
   const { has } = useFavorites()
-  const { entries: items, label } = useEntries(folder)
+  const { entries: items, label, loading } = useEntries(folder)
   const filtered = useMemo(() => {
     const n = norm(q.trim())
     return n ? items.filter((d) => norm(d.titulo).includes(n)) : items
@@ -126,7 +127,8 @@ export function DocList({ folder, title, base, search, back, subtitle, notice }:
         </label>
       )}
       {notice && <p className="notice" data-kind="warn">{notice}</p>}
-      {filtered.length === 0 && <Empty>{q ? `Nenhum resultado para “${q}”.` : 'Nada por aqui ainda.'}</Empty>}
+      {filtered.length === 0 && loading && <Empty>Carregando…</Empty>}
+      {filtered.length === 0 && !loading && <Empty>{q ? `Nenhum resultado para “${q}”.` : 'Nada por aqui ainda.'}</Empty>}
       {groups.map(([cat, docs]) => (
         <Section key={cat} header={showHeaders ? label(cat) : undefined}>
           {docs.map((d) => (

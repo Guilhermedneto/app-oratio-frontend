@@ -32,7 +32,8 @@ export function useManagedContents() {
   return useQuery({
     queryKey: ['conteudos'],
     queryFn: () => api.get<ManagedContent[]>('/conteudos'),
-    staleTime: 60_000,
+    staleTime: 0,
+    refetchOnMount: 'always',
     gcTime: 14 * 86_400_000,
     networkMode: 'offlineFirst',
   })
