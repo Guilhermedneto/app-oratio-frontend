@@ -11,7 +11,7 @@ vi.mock('@/api/client', () => ({
 }))
 
 let status: 'authed' | 'anon' = 'authed'
-vi.mock('@/features/conta/auth', () => ({ useAuth: () => ({ status }) }))
+vi.mock('@/features/conta/auth', () => ({ useOptionalAuth: () => ({ status }) }))
 
 import { usePresence } from './hooks'
 

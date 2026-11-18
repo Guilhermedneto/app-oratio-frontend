@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { useEffect } from 'react'
 import { api } from '@/api/client'
 import type { NewRequests, PrayerFeed, Presence } from '@/api/types'
-import { useAuth } from '@/features/conta/auth'
+import { useAuth, useOptionalAuth } from '@/features/conta/auth'
 import { createStore } from '@/offline/store'
 
 /** Último total de orações que o autor já "viu subir", por pedido (para animar só o que é novo). */
@@ -64,7 +64,7 @@ export function timeAgo(iso: string, now = Date.now()): string {
 
 /** Avisa a API a cada 60 s (só com o app visível e online) e devolve quantas pessoas estão rezando agora. */
 export function usePresence() {
-  const { status } = useAuth()
+  const status = useOptionalAuth()?.status
   const query = useQuery({
     queryKey: ['presenca'],
     enabled: status === 'authed',

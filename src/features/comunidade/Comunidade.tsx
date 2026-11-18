@@ -8,7 +8,8 @@ import { Page } from '@/shared/ui/Page'
 import { Empty, Segmented, Sheet } from '@/shared/ui/controls'
 import { useOnline } from '@/shared/utils'
 import { PedidoCard } from './PedidoCard'
-import { markSeen, useFeed, usePresence, type FeedTab } from './hooks'
+import { markSeen, useFeed, type FeedTab } from './hooks'
+import { PresenceBadge } from './PresenceBadge'
 import styles from './Comunidade.module.css'
 
 /** Lista de pedidos (também usada na moderação do gestor). */
@@ -93,7 +94,6 @@ export default function Comunidade() {
   const auth = useAuth()
   const qc = useQueryClient()
   const online = useOnline()
-  const praying = usePresence()
   const [tab, setTab] = useState<FeedTab>('todos')
   const [creating, setCreating] = useState(false)
 
@@ -103,11 +103,7 @@ export default function Comunidade() {
 
   return (
     <Page title="Pedidos de oração" back="Mais" subtitle="Reze pelos outros e peça que rezem por você.">
-      {auth.status === 'authed' && praying !== undefined && (
-        <p className="muted" role="status" style={{ margin: '0 0 10px' }}>
-          🙏 {praying <= 1 ? 'Você está rezando agora' : `${praying} pessoas rezando agora`}
-        </p>
-      )}
+      {auth.status === 'authed' && <PresenceBadge />}
       {auth.status === 'loading' && <p className="muted center">Verificando sessão…</p>}
       {auth.status === 'anon' && (
         <div className="card center stack">

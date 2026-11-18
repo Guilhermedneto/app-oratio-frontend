@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Prayer, Reading } from '@/api/types'
 import { contentIndex } from '@/content/loader'
+import { PresenceBadge } from '@/features/comunidade/PresenceBadge'
 import { firstName, useOptionalAuth } from '@/features/conta/auth'
 import { saintDate, useManagedContents } from '@/features/docs/managed'
 import { Markdown } from '@/shared/ui/Markdown'
@@ -156,6 +157,7 @@ export default function Hoje() {
   return (
     <Page title="Hoje" subtitle={greeting ? `Olá, ${greeting}! · ${formatLong(date)}` : formatLong(date)}>
       <div className="stack">
+        <PresenceBadge />
         {!online && (
           <p className="notice">
             <span className="offline-dot" />
