@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Prayer, Reading } from '@/api/types'
-import { contentIndex, loadDoc, loadSaint } from '@/content/loader'
+import { contentIndex, loadSaint } from '@/content/loader'
 import { firstName, useOptionalAuth } from '@/features/conta/auth'
 import { saintDate, useManagedContents } from '@/features/docs/managed'
 import { Markdown } from '@/shared/ui/Markdown'
@@ -95,20 +95,12 @@ function Thought({ date }: { date: string }) {
       .map((m) => ({ slug: m.slug, titulo: m.title, body: m.body, base: m.kind === 'texto' ? '/mais/textos' : '/mais/reflexoes' })),
   ]
   const pick = pool.length ? pool[dayNumber(date) % pool.length] : undefined
-  const doc = useAsync(() => (pick?.folder ? loadDoc(pick.folder, pick.slug) : Promise.resolve(null)), [pick?.slug])
-  const text = pick?.body ?? doc.data
-  if (!pick || !text) return null
-  const first = text.split(/\n{2,}/)[0].replace(/[*_#>]/g, '').trim()
-  const excerpt = first.length > 260 ? first.slice(0, 257).trimEnd() + '…' : first
+  if (!pick) return null
   return (
-    <div className="card">
+    <Link className={`card ${styles.thoughtCard}`} to={`${pick.base}/${pick.slug}`}>
       <h3 className={styles.saintTitle}>Para refletir hoje</h3>
-      <p className={styles.saintName}>{pick.titulo}</p>
-      <p className="muted">{excerpt}</p>
-      <p style={{ marginTop: 8 }}>
-        <Link to={`${pick.base}/${pick.slug}`}>Ler completo</Link>
-      </p>
-    </div>
+      <p className={styles.saintName} style={{ marginBottom: 0 }}>{pick.titulo}</p>
+    </Link>
   )
 }
 

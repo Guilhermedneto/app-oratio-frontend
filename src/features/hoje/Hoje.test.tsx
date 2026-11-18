@@ -79,13 +79,14 @@ describe('Hoje', () => {
     expect(screen.getByText('Texto da coleta')).toBeInTheDocument()
   })
 
-  it('mostra a reflexão do dia com link para o texto completo', async () => {
+  it('mostra só o título da reflexão do dia, e o card inteiro leva ao texto', async () => {
     serve(day())
     renderHoje()
-    expect(await screen.findByText('Para refletir hoje')).toBeInTheDocument()
-    expect(screen.getByText('Inquieto está o coração')).toBeInTheDocument()
-    expect(await screen.findByText('Texto de reflexão.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Ler completo' })).toHaveAttribute('href', '/mais/textos/agostinho-x')
+    const card = await screen.findByRole('link', { name: /Para refletir hoje/ })
+    expect(card).toHaveAttribute('href', '/mais/textos/agostinho-x')
+    expect(card).toHaveTextContent('Inquieto está o coração')
+    expect(screen.queryByText('Texto de reflexão.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Ler completo')).not.toBeInTheDocument()
   })
 
   it('avisa quando as leituras estão indisponíveis, mantendo tempo e cor', async () => {
