@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IconBack } from './icons'
 
@@ -13,18 +13,14 @@ interface Props {
 /** Página no padrão iOS: título grande que colapsa para a barra superior ao rolar. */
 export function Page({ title, subtitle, back, trailing, children }: Props) {
   const nav = useNavigate()
-  const sentinel = useRef<HTMLDivElement>(null)
   const [compact, setCompact] = useState(false)
 
   useEffect(() => {
     document.title = `${title} · Oratio`
-    const el = sentinel.current
-    if (!el || typeof IntersectionObserver === 'undefined') return
-    const io = new IntersectionObserver(([e]) => setCompact(!e.isIntersecting), {
-      rootMargin: `-${44 + 8}px 0px 0px 0px`,
-    })
-    io.observe(el)
-    return () => io.disconnect()
+    const onScroll = () => setCompact(window.scrollY > 48)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [title])
 
   return (
@@ -45,7 +41,6 @@ export function Page({ title, subtitle, back, trailing, children }: Props) {
           <div className="navbar-trailing">{trailing}</div>
         </div>
       </header>
-      <div ref={sentinel} />
       <h1 className="large-title">{title}</h1>
       {subtitle && <p className="subtitle">{subtitle}</p>}
       <div className="content">{children}</div>
