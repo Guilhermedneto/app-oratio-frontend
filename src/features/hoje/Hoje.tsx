@@ -8,7 +8,7 @@ import { saintDate, useManagedContents } from '@/features/docs/managed'
 import { Markdown } from '@/shared/ui/Markdown'
 import { Page } from '@/shared/ui/Page'
 import { Section } from '@/shared/ui/controls'
-import { IconBook, IconRosary } from '@/shared/ui/icons'
+import { IconBook, IconHeart, IconRosary } from '@/shared/ui/icons'
 import { formatLong, isoDate, RANK_LABEL, useOnline } from '@/shared/utils'
 import styles from './Hoje.module.css'
 import { useLiturgyDay } from './useLiturgy'
@@ -150,6 +150,12 @@ export default function Hoje() {
           <IconBook />
         </span>
         <span className={styles.tileLabel}>Oração da noite</span>
+      </Link>
+      <Link to="/mais/comunidade" className={styles.tile}>
+        <span className={styles.tileIcon} style={{ background: 'linear-gradient(145deg,#ff6b8b,#d6336c)' }}>
+          <IconHeart />
+        </span>
+        <span className={styles.tileLabel}>Pedidos de oração</span>
       </Link>
     </nav>
   )

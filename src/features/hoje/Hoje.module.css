@@ -27,8 +27,15 @@
 .hero :global(.chip) { background: var(--lit-ink); color: var(--lit-b); }
 .cycle { margin-top: 16px; font-size: 0.84rem; font-weight: 600; opacity: 0.85; }
 
-.quick { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+/* faixa deslizante: o 3º atalho aparece cortado na borda, indicando que há mais para o lado */
+.quick {
+  position: relative; z-index: 1; display: flex; gap: 12px; overflow-x: auto;
+  margin: 0 -16px; padding: 2px 16px 12px; scroll-padding-inline: 16px;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.quick::-webkit-scrollbar { display: none; }
 .tile {
+  flex: 0 0 calc((100% - 24px) / 2.5); scroll-snap-align: start;
   display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 8px 14px;
   background: var(--bg-grouped); border-radius: 26px; box-shadow: var(--shadow-sm); color: var(--text);
   transition: transform 0.15s, box-shadow 0.15s;

@@ -102,6 +102,14 @@ describe('Hoje', () => {
     expect(card).toHaveTextContent('Santa X')
   })
 
+  it('mostra os atalhos deslizantes, inclusive os pedidos de oração', async () => {
+    serve(day())
+    renderHoje()
+    const nav = await screen.findByRole('navigation', { name: 'Rezar agora' })
+    const hrefs = Array.from(nav.querySelectorAll('a')).map((a) => a.getAttribute('href'))
+    expect(hrefs).toEqual(['/terco', '/oracoes/oracao-da-manha', '/oracoes/oracao-da-noite', '/mais/comunidade'])
+  })
+
   it('avisa quando as leituras estão indisponíveis, mantendo tempo e cor', async () => {
     serve(day({ status: 'partial', readings: [], source: null, credits: null }))
     renderHoje()
