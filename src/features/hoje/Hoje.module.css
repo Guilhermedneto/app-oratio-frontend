@@ -27,15 +27,16 @@
 .hero :global(.chip) { background: var(--lit-ink); color: var(--lit-b); }
 .cycle { margin-top: 16px; font-size: 0.84rem; font-weight: 600; opacity: 0.85; }
 
-/* faixa deslizante: 3 atalhos por vez; arraste para o lado para ver os demais */
+/* faixa deslizante: 3 atalhos e a ponta do 4º à direita, que aparece cortado; arraste para o lado para ver os demais */
 .quick {
   position: relative; z-index: 1; display: flex; gap: 12px; overflow-x: auto;
   margin-inline: -16px; margin-bottom: -12px; padding: 0 16px 12px; scroll-padding-inline: 16px;
   scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .quick::-webkit-scrollbar { display: none; }
+.quick::after { content: ''; flex: 0 0 4px; } /* o Safari ignora o recuo final de uma faixa rolável */
 .tile {
-  flex: 0 0 calc((100% - 24px) / 3); scroll-snap-align: start;
+  flex: 0 0 calc((100% - 60px) / 3); scroll-snap-align: start;
   display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 8px 14px;
   background: var(--bg-grouped); border-radius: 26px; box-shadow: var(--shadow-sm); color: var(--text);
   transition: transform 0.15s, box-shadow 0.15s;
