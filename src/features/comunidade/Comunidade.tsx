@@ -103,7 +103,11 @@ export default function Comunidade() {
 
   return (
     <Page title="Pedidos de oração" back="Mais" subtitle="Reze pelos outros e peça que rezem por você.">
-      {auth.status === 'authed' && <PresenceBadge />}
+      {auth.status === 'authed' && (
+        <div style={{ marginBottom: 10 }}>
+          <PresenceBadge />
+        </div>
+      )}
       {auth.status === 'loading' && <p className="muted center">Verificando sessão…</p>}
       {auth.status === 'anon' && (
         <div className="card center stack">

@@ -7,11 +7,13 @@ interface Props {
   subtitle?: string
   back?: boolean | string
   trailing?: ReactNode
+  /** Fica na linha do título grande, à direita. */
+  aside?: ReactNode
   children: ReactNode
 }
 
 /** Página no padrão iOS: título grande que colapsa para a barra superior ao rolar. */
-export function Page({ title, subtitle, back, trailing, children }: Props) {
+export function Page({ title, subtitle, back, trailing, aside, children }: Props) {
   const nav = useNavigate()
   const [compact, setCompact] = useState(false)
 
@@ -41,7 +43,14 @@ export function Page({ title, subtitle, back, trailing, children }: Props) {
           <div className="navbar-trailing">{trailing}</div>
         </div>
       </header>
-      <h1 className="large-title">{title}</h1>
+      {aside ? (
+        <div className="title-row">
+          <h1 className="large-title">{title}</h1>
+          <div className="title-aside">{aside}</div>
+        </div>
+      ) : (
+        <h1 className="large-title">{title}</h1>
+      )}
       {subtitle && <p className="subtitle">{subtitle}</p>}
       <div className="content">{children}</div>
     </main>

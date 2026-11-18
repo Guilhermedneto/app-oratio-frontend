@@ -155,9 +155,8 @@ export default function Hoje() {
   )
 
   return (
-    <Page title="Hoje" subtitle={greeting ? `Olá, ${greeting}! · ${formatLong(date)}` : formatLong(date)}>
+    <Page title="Hoje" aside={<PresenceBadge />} subtitle={greeting ? `Olá, ${greeting}! · ${formatLong(date)}` : formatLong(date)}>
       <div className="stack">
-        <PresenceBadge />
         {!online && (
           <p className="notice">
             <span className="offline-dot" />
