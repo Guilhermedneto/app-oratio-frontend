@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/conta/auth'
-import { useNewRequests } from '@/features/comunidade/hooks'
+import { useNewRequests, usePresence } from '@/features/comunidade/hooks'
 import Welcome from '@/features/conta/Welcome'
 import { useLiturgyDay, usePrefetchWeek } from '@/features/hoje/useLiturgy'
 import { settingsStore } from '@/offline/stores'
@@ -76,6 +76,7 @@ export function Shell() {
   const online = useOnline()
   const immersive = pathname.startsWith('/terco/rezar')
   const novos = useNewRequests()
+  usePresence()
   const activeTab = TABS.findIndex((t) => (t.end ? pathname === t.to : pathname.startsWith(t.to)))
 
   useEffect(() => {

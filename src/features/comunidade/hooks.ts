@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { api } from '@/api/client'
-import type { NewRequests, PrayerFeed } from '@/api/types'
+import type { NewRequests, PrayerFeed, Presence } from '@/api/types'
 import { useAuth } from '@/features/conta/auth'
 import { createStore } from '@/offline/store'
 
@@ -60,4 +60,21 @@ export function timeAgo(iso: string, now = Date.now()): string {
   if (s < 3600) return `há ${Math.floor(s / 60)} min`
   if (s < 86400) return `há ${Math.floor(s / 3600)} h`
   return `há ${Math.floor(s / 86400)} d`
+}
+
+/** Avisa a API a cada 60 s (só com o app visível e online) e devolve quantas pessoas estão rezando agora. */
+export function usePresence() {
+  const { status } = useAuth()
+  const query = useQuery({
+    queryKey: ['presenca'],
+    enabled: status === 'authed',
+    queryFn: () => api.post<Presence>('/presenca'),
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+    staleTime: 30_000,
+    gcTime: 0,
+    retry: false,
+    networkMode: 'online',
+  })
+  return status === 'authed' ? query.data?.online : undefined
 }
