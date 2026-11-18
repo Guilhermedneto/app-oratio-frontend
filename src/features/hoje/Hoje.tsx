@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Prayer, Reading } from '@/api/types'
-import { contentIndex, loadSaint } from '@/content/loader'
+import { contentIndex } from '@/content/loader'
 import { firstName, useOptionalAuth } from '@/features/conta/auth'
 import { saintDate, useManagedContents } from '@/features/docs/managed'
 import { Markdown } from '@/shared/ui/Markdown'
 import { Page } from '@/shared/ui/Page'
 import { Section } from '@/shared/ui/controls'
 import { IconBook, IconRosary } from '@/shared/ui/icons'
-import { formatLong, isoDate, RANK_LABEL, useAsync, useOnline } from '@/shared/utils'
+import { formatLong, isoDate, RANK_LABEL, useOnline } from '@/shared/utils'
 import styles from './Hoje.module.css'
 import { useLiturgyDay } from './useLiturgy'
 
@@ -128,17 +128,7 @@ export default function Hoje() {
   const monthDay = date.slice(5)
   const prayers = data?.prayers ?? []
   const managed = useManagedContents().data
-  const bundledSaint = useAsync(
-    () => (data && data.rank !== 'feria' && data.rank !== 'domingo' ? loadSaint(monthDay) : Promise.resolve(null)),
-    [data?.rank, monthDay],
-  )
-  const managedSaint =
-    data && data.rank !== 'feria' && data.rank !== 'domingo'
-      ? (managed ?? []).find((m) => m.kind === 'santo' && saintDate(m) === monthDay)
-      : undefined
-  const saint = {
-    data: managedSaint ? { titulo: managedSaint.title, bio: managedSaint.body } : bundledSaint.data,
-  }
+  const saint = (managed ?? []).find((m) => m.kind === 'santo' && saintDate(m) === monthDay)
 
   const quick = (
     <nav className={styles.quick} aria-label="Rezar agora">
@@ -206,12 +196,11 @@ export default function Hoje() {
 
             <Thought date={date} />
 
-            {saint.data && (
-              <div className="card">
+            {saint && (
+              <Link className={`card ${styles.thoughtCard}`} to={`/mais/santos/${saint.slug}`}>
                 <h3 className={styles.saintTitle}>Santo do dia</h3>
-                <p className={styles.saintName}>{saint.data.titulo}</p>
-                <p className="muted">{saint.data.bio}</p>
-              </div>
+                <p className={styles.saintName} style={{ marginBottom: 0 }}>{saint.title}</p>
+              </Link>
             )}
 
             <PrayerSection header="Ritos iniciais" items={prayers.filter((p) => BEFORE.includes(p.kind))} />

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { LiturgyDay } from '@/api/types'
+import { isoDate } from '@/shared/utils'
 
 const get = vi.fn()
 vi.mock('@/api/client', () => ({
@@ -87,6 +88,18 @@ describe('Hoje', () => {
     expect(card).toHaveTextContent('Inquieto está o coração')
     expect(screen.queryByText('Texto de reflexão.')).not.toBeInTheDocument()
     expect(screen.queryByText('Ler completo')).not.toBeInTheDocument()
+  })
+
+  it('mostra o santo do dia cadastrado pelo gestor e o card leva à página dele', async () => {
+    const today = isoDate().slice(5)
+    const santo = { id: '1', slug: 'santa-x', kind: 'santo', title: 'Santa X', category: 'santos', body: 'Bio.', data: { date: today } }
+    get.mockImplementation(async (path: string) =>
+      path === '/conteudos' ? [santo] : path === '/categorias' ? [] : day({ rank: 'feria' }),
+    )
+    renderHoje()
+    const card = await screen.findByRole('link', { name: /Santo do dia/ })
+    expect(card).toHaveAttribute('href', '/mais/santos/santa-x')
+    expect(card).toHaveTextContent('Santa X')
   })
 
   it('avisa quando as leituras estão indisponíveis, mantendo tempo e cor', async () => {
